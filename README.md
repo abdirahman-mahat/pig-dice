@@ -24,6 +24,8 @@ _This web application allows two players to play a game of Pig Dice._
 * _Open a HTML file_
 * _Open web browser of choice_
 
+# link to live page
+https://abdirahman-mahat.github.io/pig-dice/
 
 
 ## Technologies Used
