@@ -35,8 +35,14 @@ https://abdirahman-mahat.github.io/pig-dice/
 * _JavaScript_
 * _jQuery_
 
+# support and contact details
+
+Contact the author at: abdirahmanmahat3@gmail.com
+
+
+
 ### License
 
 *This software is licensed under the MIT license.*
 
-Copyright (c) 2016 **_pixels tech company_**
+Copyright (c) 2018 **_pixels tech company_**
