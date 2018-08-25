@@ -1,118 +1,134 @@
-//business logic
-var player1="";
-var player2="";
-
-var throwdice = function () {
-  return Math.floor(6*Math.random())+1;
+//business-logic
+function Names(name1, name2) {
+  this.name1 = name1;
+  this.name2 = name2;
 }
 
-function Player(turn) {
-  this.roll = 0;
-  this.tempscore = 0;
-  this.totalscore = 0;
-  this.turn = turn;
-  this.playerName;
+function Player() {
+  var turnScore = 0;
+  var gameScore = 0;
+  var isActive = false;
+  this.turnScore = turnScore;
+  this.gameScore = gameScore;
+  this.isActive = isActive;
 }
 
-Player.prototype.rollone = function() {
-  if (this.roll === 1) {
-  this.tempscore = 0;
-  alert("Sorry " + this.playerName + ", you rolled a 1! Your turn is over!")
+var randomDie = randomNumber();
+
+function randomNumber() {
+    randomDie = Math.floor(6*Math.random())+1;
+
+    return randomDie;
+};
+
+var initializeGame = function() {
+  player1 = new Player();
+  player2 = new Player();
+  player1.isActive = true;
+}
+
+var switchPlayer = function() {
+  if (player1.isActive === true) {
+    player1.isActive = false;
+    player2.isActive = true;
+    turnScoreReset();
   } else {
-  this.tempscore += this.roll;
+    player2.isActive = false;
+    player1.isActive = true;
+    turnScoreReset();
   }
 }
 
-Player.prototype.hold = function () {
-  this.totalscore += this.tempscore;
-  this.tempscore = 0;
-  alert(this.playerName + ", your turn is over, pass the mouse!");
+var turnScoreReset = function() {
+  player1.turnScore = 0;
+  player2.turnScore = 0;
 }
 
-Player.prototype.winnerCheck = function () {
-  if (this.totalscore >= 100) {
-    alert(this.playerName + " You are the winner!");
+var whichPlayerRoll = function() {
+  if (player1.isActive === true) {
+    playerRoll(player1);
+  } else {
+    playerRoll(player2);
   }
 }
 
-Player.prototype.newGame = function () {
-  //debugger;
-  this.roll = 0;
-  this.tempscore = 0;
-  this.totalscore = 0;
-  this.playerName ="";
+var playerRoll = function(player) {
+  var roll = randomDie;
+  if(roll === 1){
+    player.turnScore = 0;
+    switchPlayer();
+  } else {
+    player.turnScore += roll;
+  }
+  checkForEndOfGame();
+  return roll;
 }
 
-var clearValues = function(){
-  $(".player1Name").val("");
-  $(".player2Name").val("");
+var whichPlayerHold = function() {
+  if (player1.isActive === true) {
+    playerHold(player1);
+  } else {
+    playerHold(player2);
+  }
+}
+
+var playerHold = function(player) {
+  player.gameScore += player.turnScore;
+  switchPlayer();
+}
+
+var checkForEndOfGame = function() {
+  if (player1.gameScore >= 100 || player2.gameScore >= 100) {
+    if (player1.gameScore > player2. gameScore) {
+      alert("End of game! Player 1 won!");
+    } else if (player1.gameScore < player2. gameScore) {
+      alert("End of game! Player 2 won!");
+    } else {
+      alert("End of game! Tie!");
+    }
+  }
+}
+
+var stylePanels = function() {
+  if (player1.isActive === true) {
+    $("#player2panel").removeClass("activeUser");
+    $("#player1panel").addClass("activeUser");
+  } else {
+    $("#player1panel").removeClass("activeUser");
+    $("#player2panel").addClass("activeUser");
+  }
 }
 
 
-
-
-// User Interface
+//user-interface
 $(document).ready(function() {
 
-  $("button#start").click(function(event){
-    player1 = new Player(true);
-    player2 =  new Player(false);
-    $(".player-console").show();
-    $(".start-menu").hide();
 
-    var player1Name = $(".player1Name").val();
-    $("#player1Name").text(player1Name);
+  initializeGame();
+  stylePanels();
 
-    var player2Name = $(".player2Name").val();
-    $("#player2Name").text(player2Name);
+  $("button#roll").click(function(event) {
+    $(".dice").html('<img src=img/die'+ randomDie +'.png>');
+    whichPlayerRoll();
+    stylePanels();
+    var roundScore = roundScore + randomNumber();
+    $("#player1Tscore").text(player1.turnScore);
+    $("#player1Gscore").text(player1.gameScore);
+    $("#player2Tscore").text(player2.turnScore);
+    $("#player2Gscore").text(player2.gameScore);
+    event.preventDefault();
+  })
 
-    player1.playerName=player1Name;
-    player2.playerName=player2Name;
+  $("button#hold").click(function(event) {
+    event.preventDefault();
+    whichPlayerHold();
+    stylePanels();
+  })
 
-  });
-  $("button#new-game").click(function(event){
-    $(".player-console").hide();
-    clearValues();
-    player1.newGame();
-    player2.newGame();
-    $("#round-total-1").empty();
-    $("#total-score-1").empty();
-    $("#die-roll-1").empty();
-    $("#round-total-2").empty();
-    $("#total-score-2").empty();
-    $("#die-roll-2").empty();
+$("button#newGame").click(function(event) {
+  event.preventDefault();
+  Player();
+})
 
-    $(".start-menu").show();
-  });
 
-  $("button#player1-roll").click(function(event){
-    player1.roll = throwdice();
-    $("#die-roll-1").text(player1.roll);
-    player1.rollone();
-    $("#round-total-1").text(player1.tempscore);
-  });
-
-  $("button#player2-roll").click(function(event){
-    player2.roll = throwdice();
-    $("#die-roll-2").text(player2.roll);
-    player2.rollone();
-    $("#round-total-2").text(player2.tempscore);
-  });
-
-  $("button#player1-hold").click(function(event){
-    player1.hold();
-    $("#total-score-1").text(player1.totalscore);
-    $("#round-total-1").empty();
-    $("#die-roll-1").empty();
-    player1.winnerCheck();
-  });
-
-  $("button#player2-hold").click(function(event){
-    player2.hold();
-    $("#total-score-2").text(player2.totalscore);
-    $("#round-total-2").empty();
-    $("#die-roll-2").empty();
-    player2.winnerCheck();
-  });
-
-});
+})
