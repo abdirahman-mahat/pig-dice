@@ -20,8 +20,8 @@ _This web application allows two players to play a game of Pig Dice._
 ## Setup/Installation Requirements
 
 * _Clone this repository_
-* _Open a HTML file_
-* _Open web browser of choice_
+* _Open the HTML file_
+* _Open the HTML FILE WITH web browser of choice_
 
 # link to live page
 https://abdirahman-mahat.github.io/pig-dice/
