@@ -124,11 +124,4 @@ $(document).ready(function() {
     whichPlayerHold();
     stylePanels();
   })
-
-$("button#newGame").click(function(event) {
-  event.preventDefault();
-  Player();
-})
-
-
 })
